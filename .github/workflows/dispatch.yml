@@ -18,7 +18,7 @@ jobs:
         with:
           filters: |
             services:
-              - 'service-*/src/**'
+              - 'service-*/**'
 
       - name: Deploy Application
         if: ${{ steps.filter.outputs.services == 'true' }}
