@@ -13,4 +13,4 @@ jobs:
       - name: Git clone the repository
         uses: actions/checkout@v4
       - name: echo
-        run: echo ${{needs.changes.outputs.uid}}
+        run: echo ${{needs.changes.outputs.service-a}}
