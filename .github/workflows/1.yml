@@ -7,9 +7,26 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
-      uid: ${{ steps.user_info.outputs.UID }}
+      service-a: ${{ steps.filter.outputs.service-a }}
+      service-b: ${{ steps.filter.outputs.service-b }}
+      service-c: ${{ steps.filter.outputs.service-c }}
+      config: ${{ steps.filter.outputs.config }}
     steps:
-    - name: Get UID and GID
-      id: user_info
-      run: |
-        echo "UID=testOutput" >> $GITHUB_OUTPUT
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Detect changes in directories
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            service-a:
+              - 'service-a/**'
+            service-b:
+              - 'service-b/**'
+            service-c:
+              - 'service-c/**'
+            config:
+              - '.env'
+              - 'config/**'
+              - 'docker-compose'
