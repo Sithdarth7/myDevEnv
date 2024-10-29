@@ -10,11 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download change-status artifact
+        id: download-atf
         uses: actions/download-artifact@v3
         with:
           name: change-status
           path: ./change-status
-
+      - name: on fail
+        if: ${{ always() && contains(needs.download-atf.result, 'failure') }}
+        run: echo "Changes artifact notfound, Deployment is abort."
       - name: Check if deployment is needed
         id: check-deployment
         run: |
