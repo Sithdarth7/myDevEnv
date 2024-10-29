@@ -1,0 +1,15 @@
+name: Dev Build and Push Docker Images
+
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  changes:
+    runs-on: ubuntu
+    outputs:
+      uid: ${{ steps.user_info.outputs.UID }}
+    steps:
+    - name: Get UID and GID
+      id: user_info
+      run: |
+        echo "UID=testOutput" >> $GITHUB_OUTPUT
