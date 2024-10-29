@@ -1,0 +1,14 @@
+---
+name: Dev Deploy intercom sync worker
+on:
+  workflow_run:
+    workflows: ["Dev Build and Push Docker Images"] 
+    types:
+      - completed
+jobs:
+  ec2-deployment:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && (needs.changes.outputs.uid == 'true') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git clone the repository
+        uses: actions/checkout@v4
