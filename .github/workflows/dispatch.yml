@@ -9,26 +9,17 @@ jobs:
   ec2-deployment:
     runs-on: ubuntu-latest
     steps:
-      - name: Download change-status artifact
-        id: download-atf
-        uses: actions/download-artifact@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Detect changes in directories
+        id: filter
+        uses: dorny/paths-filter@v3
         with:
-          name: change-status
-          path: ./change-status
-      - name: on fail
-        if: ${{ steps.download-atf.conclusion == 'failure' }}
-        run: echo "Changes artifact notfound, Deployment is abort."
-      - name: Check if deployment is needed
-        id: check-deployment
-        run: |
-          SERVICE_A_CHANGED=$(cat ./change-status/service-a.txt 2>/dev/null || echo "false")
-          SERVICE_B_CHANGED=$(cat ./change-status/service-b.txt 2>/dev/null || echo "false")
-          echo "Service A changed: $SERVICE_A_CHANGED"
-          echo "Service B changed: $SERVICE_B_CHANGED"
-          if [[ "$SERVICE_A_CHANGED" == "true" || "$SERVICE_B_CHANGED" == "true" ]]; then
-            echo "deploy=true" >> $GITHUB_ENV
-          fi
+          filters: |
+            services:
+              - 'service-*/src/**'
 
       - name: Deploy Application
-        if: ${{ env.deploy == 'true' }}
+        if: ${{ steps.filter.outputs.services == 'true' }}
         run: echo "Deploying application because Service A or Service B changed."
