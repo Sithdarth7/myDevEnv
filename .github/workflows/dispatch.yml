@@ -7,7 +7,7 @@ on:
       - completed
 jobs:
   ec2-deployment:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' && (needs.changes.outputs.service-a == 'true' || needs.changes.outputs.service-b == 'true') }}
     runs-on: ubuntu-latest
     steps:
       - name: Git clone the repository
