@@ -16,7 +16,7 @@ jobs:
           name: change-status
           path: ./change-status
       - name: on fail
-        if: ${{ always() && contains(needs.download-atf.result, 'failure') }}
+        if: ${{ steps.download-atf.conclusion == 'failure' }}
         run: echo "Changes artifact notfound, Deployment is abort."
       - name: Check if deployment is needed
         id: check-deployment
