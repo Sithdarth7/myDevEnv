@@ -2,6 +2,8 @@ name: Dev Build and Push Docker Images
 
 on:
   push:
+    branches:
+      - master
   workflow_dispatch:
 jobs:
   changes:
